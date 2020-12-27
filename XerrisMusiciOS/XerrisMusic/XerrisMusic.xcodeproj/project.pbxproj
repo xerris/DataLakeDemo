@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -13,6 +13,10 @@
 		CEA34E132597BE590065728C /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEA34E122597BE590065728C /* Preview Assets.xcassets */; };
 		CEA34E1E2597BE590065728C /* XerrisMusicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA34E1D2597BE590065728C /* XerrisMusicTests.swift */; };
 		CEA34E292597BE590065728C /* XerrisMusicUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA34E282597BE590065728C /* XerrisMusicUITests.swift */; };
+		CEF0DA432598121B00D44143 /* amplifyconfiguration.json in Resources */ = {isa = PBXBuildFile; fileRef = CEF0DA402598121B00D44143 /* amplifyconfiguration.json */; };
+		CEF0DA442598121B00D44143 /* awsconfiguration.json in Resources */ = {isa = PBXBuildFile; fileRef = CEF0DA412598121B00D44143 /* awsconfiguration.json */; };
+		CEF0DA452598121B00D44143 /* amplifytools.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = CEF0DA422598121B00D44143 /* amplifytools.xcconfig */; };
+		D2CA58AFB290351768935E1F /* Pods_XerrisMusic.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8913BBB9AC60D8DDE32DA181 /* Pods_XerrisMusic.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,6 +37,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		41A0D9E884D05C4B9EE93298 /* Pods-XerrisMusic.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-XerrisMusic.debug.xcconfig"; path = "Target Support Files/Pods-XerrisMusic/Pods-XerrisMusic.debug.xcconfig"; sourceTree = "<group>"; };
+		8913BBB9AC60D8DDE32DA181 /* Pods_XerrisMusic.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_XerrisMusic.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA0C7771974244CDB1C60D81 /* Pods-XerrisMusic.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-XerrisMusic.release.xcconfig"; path = "Target Support Files/Pods-XerrisMusic/Pods-XerrisMusic.release.xcconfig"; sourceTree = "<group>"; };
 		CEA34E082597BE580065728C /* XerrisMusic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XerrisMusic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEA34E0B2597BE580065728C /* XerrisMusicApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XerrisMusicApp.swift; sourceTree = "<group>"; };
 		CEA34E0D2597BE580065728C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -45,6 +52,9 @@
 		CEA34E242597BE590065728C /* XerrisMusicUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = XerrisMusicUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEA34E282597BE590065728C /* XerrisMusicUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XerrisMusicUITests.swift; sourceTree = "<group>"; };
 		CEA34E2A2597BE590065728C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CEF0DA402598121B00D44143 /* amplifyconfiguration.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = amplifyconfiguration.json; sourceTree = "<group>"; };
+		CEF0DA412598121B00D44143 /* awsconfiguration.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = awsconfiguration.json; sourceTree = "<group>"; };
+		CEF0DA422598121B00D44143 /* amplifytools.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = amplifytools.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,6 +62,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D2CA58AFB290351768935E1F /* Pods_XerrisMusic.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -72,13 +83,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1EBAE141C473F5A53ED6C6AA /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				41A0D9E884D05C4B9EE93298 /* Pods-XerrisMusic.debug.xcconfig */,
+				AA0C7771974244CDB1C60D81 /* Pods-XerrisMusic.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		CEA34DFF2597BE580065728C = {
 			isa = PBXGroup;
 			children = (
+				CEF0DA402598121B00D44143 /* amplifyconfiguration.json */,
+				CEF0DA422598121B00D44143 /* amplifytools.xcconfig */,
+				CEF0DA412598121B00D44143 /* awsconfiguration.json */,
 				CEA34E0A2597BE580065728C /* XerrisMusic */,
 				CEA34E1C2597BE590065728C /* XerrisMusicTests */,
 				CEA34E272597BE590065728C /* XerrisMusicUITests */,
 				CEA34E092597BE580065728C /* Products */,
+				1EBAE141C473F5A53ED6C6AA /* Pods */,
+				FC56D76358868965114D8311 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -130,6 +155,14 @@
 			path = XerrisMusicUITests;
 			sourceTree = "<group>";
 		};
+		FC56D76358868965114D8311 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				8913BBB9AC60D8DDE32DA181 /* Pods_XerrisMusic.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -137,9 +170,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = CEA34E2D2597BE590065728C /* Build configuration list for PBXNativeTarget "XerrisMusic" */;
 			buildPhases = (
+				DCD3DEEEDFF50A26CA6C9599 /* [CP] Check Pods Manifest.lock */,
 				CEA34E042597BE580065728C /* Sources */,
 				CEA34E052597BE580065728C /* Frameworks */,
 				CEA34E062597BE580065728C /* Resources */,
+				9177D3E229957CC7056F0345 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -233,7 +268,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CEF0DA442598121B00D44143 /* awsconfiguration.json in Resources */,
 				CEA34E132597BE590065728C /* Preview Assets.xcassets in Resources */,
+				CEF0DA452598121B00D44143 /* amplifytools.xcconfig in Resources */,
+				CEF0DA432598121B00D44143 /* amplifyconfiguration.json in Resources */,
 				CEA34E102597BE590065728C /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -253,6 +291,48 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		9177D3E229957CC7056F0345 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-XerrisMusic/Pods-XerrisMusic-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-XerrisMusic/Pods-XerrisMusic-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-XerrisMusic/Pods-XerrisMusic-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DCD3DEEEDFF50A26CA6C9599 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-XerrisMusic-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		CEA34E042597BE580065728C /* Sources */ = {
@@ -414,6 +494,7 @@
 		};
 		CEA34E2E2597BE590065728C /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 41A0D9E884D05C4B9EE93298 /* Pods-XerrisMusic.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -436,6 +517,7 @@
 		};
 		CEA34E2F2597BE590065728C /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = AA0C7771974244CDB1C60D81 /* Pods-XerrisMusic.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

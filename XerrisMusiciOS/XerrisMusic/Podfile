@@ -1,0 +1,12 @@
+# Uncomment the next line to define a global platform for your project
+platform :ios, '14.0'
+
+target 'XerrisMusic' do
+  use_frameworks!
+  pod 'Alamofire', '5.4.1'
+  pod 'Amplify'
+  pod 'AmplifyPlugins/AWSPinpointAnalyticsPlugin'
+  pod 'AmplifyPlugins/AWSCognitoAuthPlugin'
+
+
+end

@@ -1,0 +1,21 @@
+{
+    "appName": "xerrismusic",
+    "roleName": "pinpointLambdaRole621c0a1a",
+    "cloudformationPolicyName": "cloudformationPolicy621c0a1a",
+    "cloudWatchPolicyName": "cloudWatchPolicy621c0a1a",
+    "pinpointPolicyName": "pinpointPolicy621c0a1a",
+    "authPolicyName": "pinpoint_amplify_621c0a1a",
+    "unauthPolicyName": "pinpoint_amplify_621c0a1a",
+    "authRoleName": {
+        "Ref": "AuthRoleName"
+    },
+    "unauthRoleName": {
+        "Ref": "UnauthRoleName"
+    },
+    "authRoleArn": {
+        "Fn::GetAtt": [
+            "AuthRole",
+            "Arn"
+        ]
+    }
+}

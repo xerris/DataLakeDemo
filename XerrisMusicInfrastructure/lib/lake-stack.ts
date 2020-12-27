@@ -2,6 +2,7 @@ import * as s3 from '@aws-cdk/aws-s3'
 import * as iam from '@aws-cdk/aws-iam'
 import * as kineses from '@aws-cdk/aws-kinesisfirehose'
 import * as cdk from '@aws-cdk/core';
+import * as pinpoint from '@aws-cdk/aws-pinpoint';
 
 export class LakeStack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
@@ -32,5 +33,21 @@ export class LakeStack extends cdk.Stack {
 
    })
   myBucket.grantWrite(customRole)
+
+  const customFireHoseRole = new iam.Role(this, 'pinpointFirehoseAccess', {
+    roleName: 'pinpointFirehoseAccess',
+    assumedBy: new iam.ServicePrincipal('pinpoint.amazonaws.com'),
+    managedPolicies: [
+        iam.ManagedPolicy.fromAwsManagedPolicyName("AmazonKinesisFirehoseFullAccess")
+    ]
+})
+
+
+  const eventStream = new pinpoint.CfnEventStream(this, "eventStream", {
+
+    applicationId: "330daf0fb3a2484c93a5ce3b047664d3",
+    destinationStreamArn: firehoseDelivery.attrArn,
+    roleArn: customFireHoseRole.roleArn
+  })
   }
 }
