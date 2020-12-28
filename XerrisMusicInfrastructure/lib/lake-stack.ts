@@ -3,6 +3,8 @@ import * as iam from '@aws-cdk/aws-iam'
 import * as kineses from '@aws-cdk/aws-kinesisfirehose'
 import * as cdk from '@aws-cdk/core';
 import * as pinpoint from '@aws-cdk/aws-pinpoint';
+import * as glue from '@aws-cdk/aws-glue';
+import * as s3deploy from "@aws-cdk/aws-s3-deployment";
 
 export class LakeStack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
@@ -32,6 +34,7 @@ export class LakeStack extends cdk.Stack {
     }
 
    })
+
   myBucket.grantWrite(customRole)
 
   const customFireHoseRole = new iam.Role(this, 'pinpointFirehoseAccess', {
@@ -49,5 +52,72 @@ export class LakeStack extends cdk.Stack {
     destinationStreamArn: firehoseDelivery.attrArn,
     roleArn: customFireHoseRole.roleArn
   })
-  }
+
+  const landingDB = new glue.CfnDatabase(this, "landingDatabase",{
+      catalogId: this.account,
+      databaseInput:{
+      name: "landingdb"
+      }
+    })
+
+  const landingCrawlers = new glue.CfnCrawler(this, "landingCrawlers", {
+    targets: {
+      s3Targets: [{path: "s3://" + myBucket.bucketName}]
+    },
+    role: "glueadmin",
+    databaseName: "landingdb"
+    
+  })
+
+  const sparkScriptBucket = new s3.Bucket(this, "sparkScriptBucket", {
+    removalPolicy: cdk.RemovalPolicy.DESTROY
+ });
+
+
+ let deploy = new s3deploy.BucketDeployment(this, 'DeployFiles', {
+      sources: [s3deploy.Source.asset('./spark')], 
+      destinationBucket: sparkScriptBucket,
+    });
+
+
+  const glueJobTempBucket = new s3.Bucket(this, "glueJobTempBucket", {
+    removalPolicy: cdk.RemovalPolicy.DESTROY
+ });
+
+ const transformedLake = new s3.Bucket(this, "transformedLake", {
+  removalPolicy: cdk.RemovalPolicy.DESTROY
+});
+
+  let job = new glue.CfnJob(this, "relationalizeJob",{
+    role:  "glueadmin",
+    glueVersion: "2.0",
+    command:{
+      name: "glueetl",
+      pythonVersion: "3",
+      scriptLocation: "s3://"+ sparkScriptBucket.bucketName +"/relationalize_spark.py"
+    },
+    defaultArguments:{
+      "--glue_source_database": "landingdb",
+      "--glue_source_table": "lakestack_mylakelanding6df26456_agqxvt1ngc70",
+      "--glue_temp_storage": "s3://"+ glueJobTempBucket.bucketName,
+      "--glue_relationalize_output_s3_path": "s3://" + transformedLake.bucketName
+    }
+  })
+
+  const transformedDB = new glue.CfnDatabase(this, "transformedDB",{
+    catalogId: this.account,
+    databaseInput:{
+    name: "transformeddb"
+    }
+  })
+
+const transformedCrawlers = new glue.CfnCrawler(this, "transformedCrawlers", {
+  targets: {
+    s3Targets: [{path: "s3://" + transformedLake.bucketName}]
+  },
+  role: "glueadmin",
+  databaseName: "transformeddb"
+  
+})
+}  
 }
