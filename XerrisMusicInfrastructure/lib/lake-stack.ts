@@ -13,17 +13,17 @@ export class LakeStack extends cdk.Stack {
 
     const myBucket = new s3.Bucket(this, "my-lake-landing", {
       removalPolicy: cdk.RemovalPolicy.DESTROY
-   });
+    });
 
-   const customRole = new iam.Role(this, 'firehoseS3Access', {
-    roleName: 'firehoseS3Access',
-    assumedBy: new iam.ServicePrincipal('firehose.amazonaws.com'),
-    managedPolicies: [
-        iam.ManagedPolicy.fromAwsManagedPolicyName("AmazonS3FullAccess")
-    ]
-})
+    const customRole = new iam.Role(this, 'firehoseS3Access', {
+      roleName: 'firehoseS3Access',
+      assumedBy: new iam.ServicePrincipal('firehose.amazonaws.com'),
+      managedPolicies: [
+          iam.ManagedPolicy.fromAwsManagedPolicyName("AmazonS3FullAccess")
+      ]
+    })
 
-   const firehoseDelivery = new kineses.CfnDeliveryStream(this, "firehoseLake", {
+    const firehoseDelivery = new kineses.CfnDeliveryStream(this, "firehoseLake", {
     deliveryStreamName: "FirehoseDelivery",
     s3DestinationConfiguration: {
       bucketArn: myBucket.bucketArn,
@@ -32,92 +32,91 @@ export class LakeStack extends cdk.Stack {
         intervalInSeconds: 60
       }
     }
-
-   })
-
-  myBucket.grantWrite(customRole)
-
-  const customFireHoseRole = new iam.Role(this, 'pinpointFirehoseAccess', {
-    roleName: 'pinpointFirehoseAccess',
-    assumedBy: new iam.ServicePrincipal('pinpoint.amazonaws.com'),
-    managedPolicies: [
-        iam.ManagedPolicy.fromAwsManagedPolicyName("AmazonKinesisFirehoseFullAccess")
-    ]
-})
-
-
-  const eventStream = new pinpoint.CfnEventStream(this, "eventStream", {
-
-    applicationId: "330daf0fb3a2484c93a5ce3b047664d3",
-    destinationStreamArn: firehoseDelivery.attrArn,
-    roleArn: customFireHoseRole.roleArn
-  })
-
-  const landingDB = new glue.CfnDatabase(this, "landingDatabase",{
-      catalogId: this.account,
-      databaseInput:{
-      name: "landingdb"
-      }
     })
 
-  const landingCrawlers = new glue.CfnCrawler(this, "landingCrawlers", {
-    targets: {
-      s3Targets: [{path: "s3://" + myBucket.bucketName}]
-    },
-    role: "glueadmin",
-    databaseName: "landingdb"
-    
-  })
+    myBucket.grantWrite(customRole)
 
-  const sparkScriptBucket = new s3.Bucket(this, "sparkScriptBucket", {
-    removalPolicy: cdk.RemovalPolicy.DESTROY
- });
+    const customFireHoseRole = new iam.Role(this, 'pinpointFirehoseAccess', {
+      roleName: 'pinpointFirehoseAccess',
+      assumedBy: new iam.ServicePrincipal('pinpoint.amazonaws.com'),
+      managedPolicies: [
+          iam.ManagedPolicy.fromAwsManagedPolicyName("AmazonKinesisFirehoseFullAccess")
+      ]
+    })
 
 
- let deploy = new s3deploy.BucketDeployment(this, 'DeployFiles', {
+    const eventStream = new pinpoint.CfnEventStream(this, "eventStream", {
+
+      applicationId: "330daf0fb3a2484c93a5ce3b047664d3",
+      destinationStreamArn: firehoseDelivery.attrArn,
+      roleArn: customFireHoseRole.roleArn
+    })
+
+    const landingDB = new glue.CfnDatabase(this, "landingDatabase",{
+        catalogId: this.account,
+        databaseInput:{
+        name: "landingdb"
+        }
+    })
+
+    const landingCrawlers = new glue.CfnCrawler(this, "landingCrawlers", {
+      targets: {
+        s3Targets: [{path: "s3://" + myBucket.bucketName}]
+      },
+      role: "glueadmin",
+      databaseName: "landingdb"
+      
+    })
+
+    const sparkScriptBucket = new s3.Bucket(this, "sparkScriptBucket", {
+      removalPolicy: cdk.RemovalPolicy.DESTROY
+    });
+
+
+    let deploy = new s3deploy.BucketDeployment(this, 'DeployFiles', {
       sources: [s3deploy.Source.asset('./spark')], 
       destinationBucket: sparkScriptBucket,
     });
 
 
-  const glueJobTempBucket = new s3.Bucket(this, "glueJobTempBucket", {
-    removalPolicy: cdk.RemovalPolicy.DESTROY
- });
+    const glueJobTempBucket = new s3.Bucket(this, "glueJobTempBucket", {
+      removalPolicy: cdk.RemovalPolicy.DESTROY
+    });
 
- const transformedLake = new s3.Bucket(this, "transformedLake", {
-  removalPolicy: cdk.RemovalPolicy.DESTROY
-});
+    const transformedLake = new s3.Bucket(this, "transformedLake", {
+      removalPolicy: cdk.RemovalPolicy.DESTROY
+    });
 
-  let job = new glue.CfnJob(this, "relationalizeJob",{
-    role:  "glueadmin",
-    glueVersion: "2.0",
-    command:{
-      name: "glueetl",
-      pythonVersion: "3",
-      scriptLocation: "s3://"+ sparkScriptBucket.bucketName +"/relationalize_spark.py"
-    },
-    defaultArguments:{
-      "--glue_source_database": "landingdb",
-      "--glue_source_table": "lakestack_mylakelanding6df26456_agqxvt1ngc70",
-      "--glue_temp_storage": "s3://"+ glueJobTempBucket.bucketName,
-      "--glue_relationalize_output_s3_path": "s3://" + transformedLake.bucketName
-    }
-  })
+    let job = new glue.CfnJob(this, "relationalizeJob",{
+      role:  "glueadmin",
+      glueVersion: "2.0",
+      command:{
+        name: "glueetl",
+        pythonVersion: "3",
+        scriptLocation: "s3://"+ sparkScriptBucket.bucketName +"/relationalize_spark.py"
+      },
+      defaultArguments:{
+        "--glue_source_database": "landingdb",
+        "--glue_source_table": "lakestack_mylakelanding6df26456_agqxvt1ngc70",
+        "--glue_temp_storage": "s3://"+ glueJobTempBucket.bucketName,
+        "--glue_relationalize_output_s3_path": "s3://" + transformedLake.bucketName
+      }
+    })
 
-  const transformedDB = new glue.CfnDatabase(this, "transformedDB",{
-    catalogId: this.account,
-    databaseInput:{
-    name: "transformeddb"
-    }
-  })
+    const transformedDB = new glue.CfnDatabase(this, "transformedDB",{
+      catalogId: this.account,
+      databaseInput:{
+      name: "transformeddb"
+      }
+    })
 
-const transformedCrawlers = new glue.CfnCrawler(this, "transformedCrawlers", {
-  targets: {
-    s3Targets: [{path: "s3://" + transformedLake.bucketName}]
-  },
-  role: "glueadmin",
-  databaseName: "transformeddb"
-  
-})
-}  
+    const transformedCrawlers = new glue.CfnCrawler(this, "transformedCrawlers", {
+      targets: {
+        s3Targets: [{path: "s3://" + transformedLake.bucketName}]
+      },
+      role: "glueadmin",
+      databaseName: "transformeddb"
+      
+    })
+  }  
 }
