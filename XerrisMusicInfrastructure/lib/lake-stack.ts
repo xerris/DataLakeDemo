@@ -10,7 +10,8 @@ export class LakeStack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-
+    //LANDING
+    //setup landing lake
     const myBucket = new s3.Bucket(this, "my-lake-landing", {
       removalPolicy: cdk.RemovalPolicy.DESTROY
     });
@@ -23,6 +24,7 @@ export class LakeStack extends cdk.Stack {
       ]
     })
 
+    //setup firehose delivery to landing
     const firehoseDelivery = new kineses.CfnDeliveryStream(this, "firehoseLake", {
     deliveryStreamName: "FirehoseDelivery",
     s3DestinationConfiguration: {
@@ -44,7 +46,7 @@ export class LakeStack extends cdk.Stack {
       ]
     })
 
-
+    //setup event stream from pinpoint to firehose
     const eventStream = new pinpoint.CfnEventStream(this, "eventStream", {
 
       applicationId: "330daf0fb3a2484c93a5ce3b047664d3",
@@ -52,6 +54,9 @@ export class LakeStack extends cdk.Stack {
       roleArn: customFireHoseRole.roleArn
     })
 
+
+    //Tranformations
+    //Setup Glue Database for initial crawl of data
     const landingDB = new glue.CfnDatabase(this, "landingDatabase",{
         catalogId: this.account,
         databaseInput:{
@@ -59,6 +64,7 @@ export class LakeStack extends cdk.Stack {
         }
     })
 
+    //Setup crawler on landing data
     const landingCrawlers = new glue.CfnCrawler(this, "landingCrawlers", {
       targets: {
         s3Targets: [{path: "s3://" + myBucket.bucketName}]
@@ -68,6 +74,7 @@ export class LakeStack extends cdk.Stack {
       
     })
 
+    //Store spark script to flatten and transform data to parquet
     const sparkScriptBucket = new s3.Bucket(this, "sparkScriptBucket", {
       removalPolicy: cdk.RemovalPolicy.DESTROY
     });
@@ -78,15 +85,17 @@ export class LakeStack extends cdk.Stack {
       destinationBucket: sparkScriptBucket,
     });
 
-
+    //Create temp bucket for glue job
     const glueJobTempBucket = new s3.Bucket(this, "glueJobTempBucket", {
       removalPolicy: cdk.RemovalPolicy.DESTROY
     });
 
+    //Create a lake for the cleaner transformed data
     const transformedLake = new s3.Bucket(this, "transformedLake", {
       removalPolicy: cdk.RemovalPolicy.DESTROY
     });
 
+    //Create glue job to transform data and store in new lake
     let job = new glue.CfnJob(this, "relationalizeJob",{
       role:  "glueadmin",
       glueVersion: "2.0",
@@ -103,6 +112,7 @@ export class LakeStack extends cdk.Stack {
       }
     })
 
+    //Setup Glue DB to catalog the new transformed data
     const transformedDB = new glue.CfnDatabase(this, "transformedDB",{
       catalogId: this.account,
       databaseInput:{
@@ -110,6 +120,7 @@ export class LakeStack extends cdk.Stack {
       }
     })
 
+    //Setup crawler to to crawl and catalog the transformed data
     const transformedCrawlers = new glue.CfnCrawler(this, "transformedCrawlers", {
       targets: {
         s3Targets: [{path: "s3://" + transformedLake.bucketName}]
